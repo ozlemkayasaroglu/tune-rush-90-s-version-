@@ -120,7 +120,7 @@ const handleSkip = () => {
 
 1. Repoyu klonlayın:
 ```bash
-git clone https://github.com/yourusername/tune-rush.git
+git clone https://github.com/AtaKNY/tune-rush.git
 ```
 
 2. Bağımlılıkları yükleyin:
