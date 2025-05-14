@@ -38,6 +38,9 @@ export default function RandomMusic() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const nextQuestionTimerRef = useRef<NodeJS.Timeout | null>(null); // Yeni timer ref
+  const [audioEnabled, setAudioEnabled] = useState(false);
+  const [showAudioPrompt, setShowAudioPrompt] = useState(true);
+  const [isMuted, setIsMuted] = useState(false);
 
   useEffect(() => {
     // Cleanup function
@@ -52,6 +55,24 @@ export default function RandomMusic() {
         clearTimeout(nextQuestionTimerRef.current);
       }
     };
+  }, []);
+
+  useEffect(() => {
+    // Ses çalma durumunu kontrol et
+    const checkAudio = async () => {
+      if (audioRef.current) {
+        try {
+          await audioRef.current.play();
+          audioRef.current.pause();
+          setAudioEnabled(true);
+          setShowAudioPrompt(false);
+        } catch (error) {
+          setAudioEnabled(false);
+          setShowAudioPrompt(true);
+        }
+      }
+    };
+    checkAudio();
   }, []);
 
   const startTimer = () => {
@@ -110,8 +131,28 @@ export default function RandomMusic() {
     getRandomMusic();
   };
 
+  const toggleSound = async () => {
+    if (audioRef.current) {
+      if (isMuted) {
+        try {
+          audioRef.current.muted = false;
+          if (question) {
+            audioRef.current.src = question.correctTrack.preview;
+            await audioRef.current.play();
+          }
+          setIsMuted(false);
+        } catch (error) {
+          console.error("Ses açma hatası:", error);
+        }
+      } else {
+        audioRef.current.muted = true;
+        setIsMuted(true);
+      }
+    }
+  };
+
   const getRandomMusic = async () => {
-    if (loading) return; // Eğer zaten yükleme yapılıyorsa yeni istek atma
+    if (loading) return;
     
     setLoading(true);
     setError(null);
@@ -129,15 +170,18 @@ export default function RandomMusic() {
       if (!response.ok) throw new Error('Bir hata oluştu');
       const data = await response.json();
       
-      // Component unmount edilmediyse state'i güncelle
       setQuestion(data);
       
       if (audioRef.current) {
         audioRef.current.src = data.correctTrack.preview;
-        await audioRef.current.play().catch(error => {
-          console.error("Ses çalma hatası:", error);
-          setError('Ses çalınamadı. Lütfen tekrar deneyin.');
-        });
+        if (!isMuted) {
+          await audioRef.current.play().catch(error => {
+            console.error("Ses çalma hatası:", error);
+            setError('Ses çalınamadı. Lütfen tekrar deneyin.');
+          });
+        }
+        startTimer();
+      } else {
         startTimer();
       }
     } catch (err) {
@@ -328,14 +372,12 @@ export default function RandomMusic() {
       animate={{ opacity: 1 }}
       className="min-h-screen bg-black text-white p-8"
     >
-      <audio ref={audioRef} loop />
+      <audio ref={audioRef} loop muted={isMuted} />
       
       <div className="max-w-7xl mx-auto">
-        <motion.div 
-          initial={{ y: -20 }}
-          animate={{ y: 0 }}
-          className="flex justify-between items-center mb-6"
-        >
+
+
+        <div className="flex justify-between items-center mb-6">
           <motion.div 
             initial={{ x: -20 }}
             animate={{ x: 0 }}
@@ -349,14 +391,22 @@ export default function RandomMusic() {
             </span>
           </motion.div>
           
-          <motion.div 
-            initial={{ x: 20 }}
-            animate={{ x: 0 }}
-            className="text-xl font-mono"
-          >
-            {timeLeft}s
-          </motion.div>
-        </motion.div>
+          <div className="flex items-center gap-4">
+            <button
+              onClick={toggleSound}
+              className="bg-gray-800 hover:bg-gray-700 p-2 rounded-full transition-all duration-200"
+            >
+              {isMuted ? '🔇' : '🔊'}
+            </button>
+            <motion.div 
+              initial={{ x: 20 }}
+              animate={{ x: 0 }}
+              className="text-xl font-mono"
+            >
+              {timeLeft}s
+            </motion.div>
+          </div>
+        </div>
 
         <motion.div 
           className="w-full bg-gray-800 h-2 rounded-full mb-8"
