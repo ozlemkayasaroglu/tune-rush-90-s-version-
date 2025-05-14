@@ -2,11 +2,6 @@
 
 Tune Rush, Türkçe rap müzik bilginizi test edebileceğiniz interaktif bir quiz oyunudur. Deezer API'si üzerinden rastgele Türkçe rap şarkıları getirir ve kullanıcıya 4 şık sunar.
 
-> ⚠️ **Önemli Not**: Mobil cihazlarda tarayıcı politikaları gereği otomatik ses çalma özelliği devre dışı olabilir. Sesi duymuyorsanız:
-> - Tarayıcınızın ses ayarlarını kontrol edin
-> - Cihazınızın sessiz modda olmadığından emin olun
-> - Sayfayı yenileyin ve ekrana bir kez dokunun
-> - Bazı mobil tarayıcılarda ses çalma özelliği desteklenmeyebilir
 
 ## 🎮 Oyun Özellikleri
 
