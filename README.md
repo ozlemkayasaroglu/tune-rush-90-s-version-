@@ -1,36 +1,147 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🎵 Tune Rush - Türkçe Rap Quiz Oyunu
 
-## Getting Started
+Tune Rush, Türkçe rap müzik bilginizi test edebileceğiniz interaktif bir quiz oyunudur. Deezer API'si üzerinden rastgele Türkçe rap şarkıları getirir ve kullanıcıya 4 şık sunar.
 
-First, run the development server:
+## 🎮 Oyun Özellikleri
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- 10 soruluk quiz formatı
+- Her soru için 15 saniye süre
+- 3 pas hakkı
+- Puan sistemi ve başarı değerlendirmesi
+- Şarkı önizleme özelliği
+- Blur efektli albüm kapakları
+- Doğru/yanlış cevap animasyonları
+- Modern ve responsive tasarım
+
+## 🛠️ Teknik Özellikler
+
+### Kullanılan Teknolojiler
+
+- **Frontend Framework**: Next.js 14
+- **Dil**: TypeScript
+- **Stil**: Tailwind CSS
+- **Animasyon**: Framer Motion
+- **API**: Deezer API
+- **State Yönetimi**: React Hooks
+
+### Proje Yapısı
+
+```
+tune-rush/
+├── app/
+│   ├── components/
+│   │   └── RandomMusic.tsx    # Ana oyun bileşeni
+│   ├── api/
+│   │   └── random-music/     # Deezer API entegrasyonu
+│   ├── types/                # TypeScript tip tanımlamaları
+│   ├── utils/                # Yardımcı fonksiyonlar
+│   ├── layout.tsx           # Ana sayfa layoutu
+│   └── page.tsx             # Ana sayfa
+├── public/                  # Statik dosyalar
+└── package.json            # Bağımlılıklar ve scriptler
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Önemli Bileşenler
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+#### RandomMusic.tsx
+Ana oyun mantığını içeren bileşen:
+- Soru yönetimi
+- Süre kontrolü
+- Kullanıcı etkileşimleri
+- Animasyon ve geçişler
+- Puan hesaplama
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```typescript
+interface Track {
+  id: string;
+  title: string;
+  thumbnail: string;
+  preview: string;
+  artist: string;
+  album: string;
+}
 
-## Learn More
+interface QuizQuestion {
+  correctTrack: Track;
+  options: {
+    title: string;
+    artist: string;
+  }[];
+  correctIndex: number;
+}
+```
 
-To learn more about Next.js, take a look at the following resources:
+### Özellik Detayları
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+#### Süre Yönetimi
+```typescript
+const [timeLeft, setTimeLeft] = useState<number>(15);
+const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+useEffect(() => {
+  if (isActive && timeLeft > 0) {
+    timerRef.current = setInterval(() => {
+      setTimeLeft((prev) => prev - 1);
+    }, 1000);
+  }
+}, [isActive, timeLeft]);
+```
 
-## Deploy on Vercel
+#### Albüm Kapağı Blur Efekti
+```typescript
+<img
+  src={question.correctTrack.thumbnail}
+  alt="Şarkı Kapağı"
+  className={`w-full h-full object-cover transition-all duration-1000 ${
+    selectedAnswer === null ? 'blur-xl' : 'blur-none'
+  }`}
+/>
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+#### Pas Hakkı Sistemi
+```typescript
+const [skipCount, setSkipCount] = useState(3);
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+const handleSkip = () => {
+  if (skipCount > 0 && !loading && selectedAnswer === null) {
+    setSkipCount(prev => prev - 1);
+    getRandomMusic();
+  }
+};
+```
+
+## 🚀 Kurulum
+
+1. Repoyu klonlayın:
+```bash
+git clone https://github.com/yourusername/tune-rush.git
+```
+
+2. Bağımlılıkları yükleyin:
+```bash
+cd tune-rush
+npm install
+```
+
+3. Geliştirme sunucusunu başlatın:
+```bash
+npm run dev
+```
+
+4. Tarayıcınızda açın:
+```
+http://localhost:3000
+```
+
+## 🎯 Gelecek Özellikler
+
+- [ ] Çoklu oyuncu modu
+- [ ] Farklı müzik kategorileri
+- [ ] Zorluk seviyeleri
+- [ ] Liderlik tablosu
+- [ ] Sosyal medya paylaşımı
+
+## 📝 Lisans
+
+Bu proje MIT lisansı altında lisanslanmıştır.
+
