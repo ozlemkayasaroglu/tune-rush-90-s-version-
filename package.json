@@ -9,16 +9,21 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@types/youtube": "^0.1.1",
+    "framer-motion": "^12.11.1",
+    "googleapis": "^148.0.0",
+    "next": "15.3.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "next": "15.3.2"
+    "soundcloud-api-client": "^0.0.9",
+    "use-sound": "^5.0.0"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@tailwindcss/postcss": "^4",
-    "tailwindcss": "^4"
+    "tailwindcss": "^4",
+    "typescript": "^5"
   }
 }
