@@ -151,3 +151,12 @@ Bu proje MIT lisansı altında lisanslanmıştır.
 - **Mobil Ses Sorunu**: Bazı mobil tarayıcılarda güvenlik politikaları nedeniyle otomatik ses çalma özelliği çalışmayabilir.
 - Sorunu çözmek için yukarıdaki önerileri deneyebilir veya masaüstü bir tarayıcı kullanabilirsiniz.
 
+## 🙏 Özel Teşekkürler
+
+Bu projenin geliştirilmesinde değerli katkıları ve destekleri için:
+
+- [ZenCoders](https://x.com/i/communities/1921199300429705621) topluluğuna
+- [@mommytsx](https://x.com/mommytsx) ([GitHub: @ozlemkayasaroglu](https://github.com/ozlemkayasaroglu))'e
+
+içtenlikle teşekkür ederim. 🙌
+
