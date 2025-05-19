@@ -4,12 +4,12 @@ import { QuizQuestion } from '../types/game';
 interface DeezerTrack {
   id: string;
   title: string;
-  thumbnail: string;
-  preview: string;
   artist: string;
-  album?: string;
-  release_date?: string;
-  album_cover?: string;
+  preview: string;
+  thumbnail: string;
+  album: string;
+  release_date: string;
+  album_cover: string;
 }
 
 const pop90sArtists = [
