@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface Track {
   id: string;
@@ -21,7 +21,7 @@ interface QuizQuestion {
   correctIndex: number;
 }
 
-const MAX_QUESTIONS = 10; // Maksimum soru sayısı
+const MAX_QUESTIONS = 30; // Maksimum soru sayısı
 
 export default function RandomMusic() {
   const [question, setQuestion] = useState<QuizQuestion | null>(null);
@@ -116,7 +116,7 @@ export default function RandomMusic() {
 
   const resetGame = () => {
     if (loading) return;
-    
+
     setScore(0);
     setTotalQuestions(0);
     setGameEnded(false);
@@ -153,31 +153,31 @@ export default function RandomMusic() {
 
   const getRandomMusic = async () => {
     if (loading) return;
-    
+
     setLoading(true);
     setError(null);
     setQuestion(null);
     setSelectedAnswer(null);
     stopTimer();
-    
+
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current.currentTime = 0;
     }
 
     try {
-      const response = await fetch('/api/random-music');
-      if (!response.ok) throw new Error('Bir hata oluştu');
+      const response = await fetch("/api/random-music");
+      if (!response.ok) throw new Error("Bir hata oluştu");
       const data = await response.json();
-      
+
       setQuestion(data);
-      
+
       if (audioRef.current) {
         audioRef.current.src = data.correctTrack.preview;
         if (!isMuted) {
-          await audioRef.current.play().catch(error => {
+          await audioRef.current.play().catch((error) => {
             console.error("Ses çalma hatası:", error);
-            setError('Ses çalınamadı. Lütfen tekrar deneyin.');
+            setError("Ses çalınamadı. Lütfen tekrar deneyin.");
           });
         }
         startTimer();
@@ -185,7 +185,7 @@ export default function RandomMusic() {
         startTimer();
       }
     } catch (err) {
-      setError('Müzik yüklenirken bir hata oluştu');
+      setError("Müzik yüklenirken bir hata oluştu");
     } finally {
       setLoading(false);
     }
@@ -193,17 +193,17 @@ export default function RandomMusic() {
 
   const handleAnswer = (index: number) => {
     if (selectedAnswer !== null || !question || loading) return;
-    
+
     stopTimer();
     setSelectedAnswer(index);
-    
+
     const newTotal = totalQuestions + 1;
     setTotalQuestions(newTotal);
-    
+
     if (index === question.correctIndex) {
-      setScore(prev => prev + 1);
+      setScore((prev) => prev + 1);
     }
-    
+
     if (newTotal >= MAX_QUESTIONS) {
       setGameEnded(true);
       if (audioRef.current) {
@@ -219,7 +219,7 @@ export default function RandomMusic() {
         getRandomMusic();
       }, 1500);
     }
-    
+
     if (audioRef.current) {
       audioRef.current.pause();
     }
@@ -227,10 +227,10 @@ export default function RandomMusic() {
 
   const handleSkip = () => {
     if (skipCount > 0 && !loading && selectedAnswer === null) {
-      setSkipCount(prev => prev - 1);
+      setSkipCount((prev) => prev - 1);
       const newTotal = totalQuestions + 1;
       setTotalQuestions(newTotal);
-      
+
       if (newTotal >= MAX_QUESTIONS) {
         setGameEnded(true);
         if (audioRef.current) {
@@ -244,25 +244,25 @@ export default function RandomMusic() {
 
   if (gameEnded) {
     return (
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         className="min-h-screen bg-black text-white flex items-center justify-center p-4"
       >
         <div className="max-w-4xl w-full">
-          <motion.div 
+          <motion.div
             className="bg-gray-900 rounded-2xl p-8 shadow-2xl"
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
           >
-            <motion.h1 
+            <motion.h1
               initial={{ y: -20 }}
               animate={{ y: 0 }}
               className="text-5xl font-bold mb-8 bg-gradient-to-r from-purple-500 to-pink-500 text-transparent bg-clip-text text-center"
             >
               Oyun Bitti! 🎉
             </motion.h1>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
               <motion.div
                 initial={{ x: -20, opacity: 0 }}
@@ -274,7 +274,7 @@ export default function RandomMusic() {
                     {score}/{MAX_QUESTIONS}
                   </span>
                 </div>
-                
+
                 <div className="text-xl text-gray-400">
                   {score === MAX_QUESTIONS ? (
                     <div className="space-y-2">
@@ -298,7 +298,7 @@ export default function RandomMusic() {
                     </div>
                   )}
                 </div>
-                
+
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
@@ -308,7 +308,7 @@ export default function RandomMusic() {
                   Tekrar Oyna 🎮
                 </motion.button>
               </motion.div>
-              
+
               <motion.div
                 initial={{ x: 20, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
@@ -328,28 +328,28 @@ export default function RandomMusic() {
 
   if (!gameStarted) {
     return (
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         className="min-h-screen bg-black text-white flex items-center justify-center p-4"
       >
         <div className="max-w-4xl w-full text-center">
-          <motion.h1 
+          <motion.h1
             initial={{ y: -50 }}
             animate={{ y: 0 }}
             className="text-5xl font-bold mb-6 bg-gradient-to-r from-purple-500 to-pink-500 text-transparent bg-clip-text"
           >
-            Türkçe Rap Quiz
+            90's Türkçe Pop
           </motion.h1>
-          
-          <motion.p 
+
+          <motion.p
             initial={{ y: 50 }}
             animate={{ y: 0 }}
             className="text-gray-400 mb-8 text-lg"
           >
             {MAX_QUESTIONS} soruda kendini göster! 🎵
           </motion.p>
-          
+
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -367,18 +367,16 @@ export default function RandomMusic() {
   }
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       className="min-h-screen bg-black text-white p-8"
     >
       <audio ref={audioRef} loop muted={isMuted} />
-      
+
       <div className="max-w-7xl mx-auto">
-
-
         <div className="flex justify-between items-center mb-6">
-          <motion.div 
+          <motion.div
             initial={{ x: -20 }}
             animate={{ x: 0 }}
             className="text-2xl font-bold"
@@ -390,15 +388,15 @@ export default function RandomMusic() {
               (Kalan: {MAX_QUESTIONS - totalQuestions})
             </span>
           </motion.div>
-          
+
           <div className="flex items-center gap-4">
             <button
               onClick={toggleSound}
               className="bg-gray-800 hover:bg-gray-700 p-2 rounded-full transition-all duration-200"
             >
-              {isMuted ? '🔇' : '🔊'}
+              {isMuted ? "🔇" : "🔊"}
             </button>
-            <motion.div 
+            <motion.div
               initial={{ x: 20 }}
               animate={{ x: 0 }}
               className="text-xl font-mono"
@@ -408,22 +406,22 @@ export default function RandomMusic() {
           </div>
         </div>
 
-        <motion.div 
+        <motion.div
           className="w-full bg-gray-800 h-2 rounded-full mb-8"
           initial={{ scaleX: 0 }}
           animate={{ scaleX: 1 }}
         >
-          <motion.div 
+          <motion.div
             className="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"
-            animate={{ 
+            animate={{
               width: `${(timeLeft / 15) * 100}%`,
-              transition: { duration: 0.5 }
+              transition: { duration: 0.5 },
             }}
           />
         </motion.div>
 
         {error && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             className="bg-red-500/20 border border-red-500 text-red-500 p-4 rounded-lg mb-6"
@@ -441,10 +439,8 @@ export default function RandomMusic() {
               exit={{ opacity: 0, y: -20 }}
               className="grid grid-cols-1 md:grid-cols-2 gap-8"
             >
-      
-
               {/* Sağ Taraf - Kapak Resmi */}
-              <motion.div 
+              <motion.div
                 className="relative aspect-square rounded-2xl overflow-hidden shadow-2xl shadow-purple-500/10"
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
@@ -455,39 +451,41 @@ export default function RandomMusic() {
                     src={question.correctTrack.thumbnail}
                     alt="Şarkı Kapağı"
                     className={`w-full h-full object-cover transition-all duration-1000 ${
-                      selectedAnswer === null ? 'blur-xl' : 'blur-none'
+                      selectedAnswer === null ? "blur-xl" : "blur-none"
                     }`}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                  
+
                   {/* Blur üzerinde gösterilecek içerik */}
                   {selectedAnswer === null && (
-                    <motion.div 
+                    <motion.div
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       className="absolute inset-0 flex items-center justify-center"
                     >
                       <div className="text-center p-4">
-                        <motion.div 
+                        <motion.div
                           animate={{ scale: [1, 1.1, 1] }}
                           transition={{ repeat: Infinity, duration: 2 }}
                           className="text-6xl mb-4"
                         >
                           🎵
                         </motion.div>
-                        <p className="text-xl font-bold text-white">Şarkıyı Tahmin Et!</p>
+                        <p className="text-xl font-bold text-white">
+                          Şarkıyı Tahmin Et!
+                        </p>
                       </div>
                     </motion.div>
                   )}
-                  
+
                   {/* Doğru cevap animasyonu */}
                   {selectedAnswer === question.correctIndex && (
-                    <motion.div 
+                    <motion.div
                       initial={{ opacity: 0, scale: 0.5 }}
                       animate={{ opacity: 1, scale: 1 }}
                       className="absolute inset-0 flex items-center justify-center bg-green-500/20"
                     >
-                      <motion.div 
+                      <motion.div
                         initial={{ rotate: 0 }}
                         animate={{ rotate: 360 }}
                         transition={{ duration: 0.5 }}
@@ -497,29 +495,30 @@ export default function RandomMusic() {
                       </motion.div>
                     </motion.div>
                   )}
-                  
+
                   {/* Yanlış cevap animasyonu */}
-                  {selectedAnswer !== null && selectedAnswer !== question.correctIndex && (
-                    <motion.div 
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      className="absolute inset-0 flex items-center justify-center bg-red-500/20"
-                    >
-                      <motion.div 
-                        animate={{ y: [0, -10, 0] }}
-                        transition={{ duration: 0.5 }}
-                        className="text-6xl"
+                  {selectedAnswer !== null &&
+                    selectedAnswer !== question.correctIndex && (
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="absolute inset-0 flex items-center justify-center bg-red-500/20"
                       >
-                        ❌
+                        <motion.div
+                          animate={{ y: [0, -10, 0] }}
+                          transition={{ duration: 0.5 }}
+                          className="text-6xl"
+                        >
+                          ❌
+                        </motion.div>
                       </motion.div>
-                    </motion.div>
-                  )}
+                    )}
                 </div>
               </motion.div>
 
-                      {/* Sol Taraf - Şıklar */}
-                      <motion.div className="space-y-4">
-                <motion.h2 
+              {/* Sol Taraf - Şıklar */}
+              <motion.div className="space-y-4">
+                <motion.h2
                   initial={{ y: -10 }}
                   animate={{ y: 0 }}
                   className="text-2xl font-bold text-center mb-6 bg-gradient-to-r from-purple-500 to-pink-500 text-transparent bg-clip-text"
@@ -532,10 +531,10 @@ export default function RandomMusic() {
                     <motion.button
                       key={index}
                       initial={{ x: -20, opacity: 0 }}
-                      animate={{ 
-                        x: 0, 
+                      animate={{
+                        x: 0,
                         opacity: 1,
-                        transition: { delay: index * 0.1 }
+                        transition: { delay: index * 0.1 },
                       }}
                       whileHover={{ scale: 1.02, x: 10 }}
                       whileTap={{ scale: 0.98 }}
@@ -543,13 +542,14 @@ export default function RandomMusic() {
                       disabled={selectedAnswer !== null}
                       className={`
                         w-full p-4 rounded-xl text-left transition-all duration-200
-                        ${selectedAnswer === null 
-                          ? 'bg-gray-800 hover:bg-gray-700 border-2 border-transparent hover:border-purple-500' 
-                          : index === question.correctIndex
-                            ? 'bg-green-500/20 border-2 border-green-500'
+                        ${
+                          selectedAnswer === null
+                            ? "bg-gray-800 hover:bg-gray-700 border-2 border-transparent hover:border-purple-500"
+                            : index === question.correctIndex
+                            ? "bg-green-500/20 border-2 border-green-500"
                             : index === selectedAnswer
-                              ? 'bg-red-500/20 border-2 border-red-500'
-                              : 'bg-gray-800 opacity-50'
+                            ? "bg-red-500/20 border-2 border-red-500"
+                            : "bg-gray-800 opacity-50"
                         }
                       `}
                     >
@@ -559,7 +559,9 @@ export default function RandomMusic() {
                         </div>
                         <div>
                           <div className="font-semibold">{option.title}</div>
-                          <div className="text-sm text-gray-400">{option.artist}</div>
+                          <div className="text-sm text-gray-400">
+                            {option.artist}
+                          </div>
                         </div>
                       </div>
                     </motion.button>
@@ -578,33 +580,35 @@ export default function RandomMusic() {
                       </div>
                     ) : selectedAnswer === -1 ? (
                       <div className="text-red-500 font-bold">
-                        Süre Doldu! Doğru cevap: {question.correctTrack.title} - {question.correctTrack.artist}
+                        Süre Doldu! Doğru cevap: {question.correctTrack.title} -{" "}
+                        {question.correctTrack.artist}
                       </div>
                     ) : (
                       <div className="text-red-500 font-bold">
-                        Yanlış! Doğru cevap: {question.correctTrack.title} - {question.correctTrack.artist}
+                        Yanlış! Doğru cevap: {question.correctTrack.title} -{" "}
+                        {question.correctTrack.artist}
                       </div>
                     )}
                   </motion.div>
                 )}
 
                 <div className="flex gap-4">
-  
-
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={handleSkip}
-                    disabled={skipCount === 0 || loading || selectedAnswer !== null}
+                    disabled={
+                      skipCount === 0 || loading || selectedAnswer !== null
+                    }
                     className="bg-gray-800 w-full hover:bg-gray-700 text-start border-2 border-transparent hover:border-purple-500 text-white font-bold py-4 px-8 rounded-xl text-xl shadow-lg hover:shadow-purple-500/20 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                             <div className="flex items-center">
-                 
-                        <div>
-                          <div className="font-semibold">Pas ({skipCount} / 3)</div>
-                  
+                    <div className="flex items-center">
+                      <div>
+                        <div className="font-semibold">
+                          Pas ({skipCount} / 3)
                         </div>
                       </div>
+                    </div>
                   </motion.button>
                 </div>
               </motion.div>

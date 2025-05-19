@@ -16,116 +16,33 @@ interface QuizQuestion {
   correctIndex: number;
 }
 
-// Türkçe müzik türleri ve anahtar kelimeler
-const turkishMusicKeywords = [
-  'türkçe rap',
-  'türk rap',
-  'turkish rap',
-  'türkçe hip hop'
+const pop90sArtists = [
+  'Tarkan',
+  'Sezen Aksu',
+  'Levent Yüksel',
+  'Sertab Erener',
+  'Nilüfer',
+  'Kenan Doğulu',
+  'Barış Manço',
+  'Ajda Pekkan',
+  'Yonca Evcimik',
+  'Nazan Öncel',
+  'İzel',
+  'Nükhet Duru',
+  'Ebru Gündeş',
+  'Burak Kut',
+  'Mustafa Sandal'
 ];
 
-// Rap sanatçıları
-const rapArtists = [
-  'Ceza',
-  'Sagopa Kajmer',
-  'Şehinşah',
-  'Ezhel',
-  'Ben Fero',
-  'Norm Ender',
-  'Contra',
-  'Allame',
-  'Şanışer',
-  'Defkhan',
-  'Pit10',
-  'Hidra',
-  'Joker',
-  'No.1',
-  'Rota',
-  'Server Uraz',
-  'Stabil',
-  'Summer Cem',
-  'Tankurt Manas',
-  'UZI'
-];
-
-// Filtrelenecek kelimeler
 const excludedWords = [
-  'remix',
-  'mix',
-  'cover',
-  'karaoke',
-  'instrumental',
-  'soundtrack',
-  'english',
-  'ingilizce',
-  'çocuk',
-  'bebek',
-  'ninni',
-  'kids',
-  'baby',
-  'lullaby'
+  'remix', 'mix', 'cover', 'karaoke', 'instrumental',
+  'soundtrack', 'english', 'ingilizce',
+  'çocuk', 'bebek', 'ninni', 'kids', 'baby', 'lullaby'
 ];
 
-function isTurkishTitle(title: string, artist: string): boolean {
-  const combinedText = `${title} ${artist}`.toLowerCase();
-  
-  // Filtrelenecek kelimeleri kontrol et
-  if (excludedWords.some(word => combinedText.includes(word))) {
-    return false;
-  }
-
-  // Türkçe karakterler içeriyor mu kontrol et
-  const turkishChars = ['ç', 'ğ', 'ı', 'ö', 'ş', 'ü', 'â', 'î', 'û'];
-  if (turkishChars.some(char => combinedText.includes(char))) {
-    return true;
-  }
-
-  // En az bir Türkçe kelime içeriyor mu kontrol et
-  const turkishWords = ['bir', 've', 'ile', 'bu', 'sen', 'ben', 'aşk', 'sevda', 'yürek', 'gönül', 'hayat'];
-  return turkishWords.some(word => combinedText.includes(word));
-}
-
-async function searchDeezer(query: string): Promise<any[]> {
-  try {
-    const response = await fetch(
-      `https://api.deezer.com/search?q=${encodeURIComponent(query)}&limit=50&output=json`
-    );
-
-    if (!response.ok) {
-      throw new Error('API isteği başarısız oldu');
-    }
-
-    const data = await response.json();
-    return data.data || [];
-  } catch (error) {
-    console.error('Deezer arama hatası:', error);
-    return [];
-  }
-}
-
-async function getSimilarTracks(artist: string, excludeTitle: string): Promise<{title: string, artist: string}[]> {
-  try {
-    // Sanatçının diğer şarkılarını ara
-    const artistTracks = await searchDeezer(artist);
-    
-    // Benzer şarkıları filtrele
-    const similarTracks = artistTracks
-      .filter((track: any) => 
-        track.type === 'track' &&
-        track.title !== excludeTitle &&
-        isTurkishTitle(track.title, track.artist.name)
-      )
-      .map((track: any) => ({
-        title: track.title,
-        artist: track.artist.name
-      }));
-
-    // Rastgele 3 şarkı seç
-    return shuffleArray(similarTracks).slice(0, 3);
-  } catch (error) {
-    console.error('Benzer şarkı arama hatası:', error);
-    return [];
-  }
+function isValidTitle(title: string, artist: string): boolean {
+  const text = `${title} ${artist}`.toLowerCase();
+  return !excludedWords.some(word => text.includes(word));
 }
 
 function shuffleArray<T>(array: T[]): T[] {
@@ -137,64 +54,74 @@ function shuffleArray<T>(array: T[]): T[] {
   return shuffled;
 }
 
-export async function getRandomTurkishMusic(): Promise<QuizQuestion> {
+async function searchDeezer(query: string): Promise<any[]> {
   try {
-    // Rastgele bir rap sanatçısı seç
-    const randomArtist = rapArtists[Math.floor(Math.random() * rapArtists.length)];
-    
-    // Sanatçının şarkılarını ara
-    const tracks = await searchDeezer(randomArtist);
-    
-    // Uygun şarkıları filtrele
-    const turkishTracks = tracks.filter((track: any) => 
-      track.preview && 
+    const res = await fetch(`https://api.deezer.com/search?q=${encodeURIComponent(query)}&limit=50&output=json`);
+    const data = await res.json();
+    return data.data || [];
+  } catch (error) {
+    console.error('Deezer API hatası:', error);
+    return [];
+  }
+}
+
+async function getSimilarTracks(artist: string, excludeTitle: string): Promise<{title: string, artist: string}[]> {
+  const tracks = await searchDeezer(artist);
+  return shuffleArray(
+    tracks
+      .filter((track: any) =>
+        track.type === 'track' &&
+        track.title !== excludeTitle &&
+        isValidTitle(track.title, track.artist.name)
+      )
+      .map((track: any) => ({
+        title: track.title,
+        artist: track.artist.name
+      }))
+  ).slice(0, 3);
+}
+
+export async function getRandom90sPopQuiz(): Promise<QuizQuestion> {
+  try {
+    const artist = pop90sArtists[Math.floor(Math.random() * pop90sArtists.length)];
+    const tracks = await searchDeezer(artist);
+
+    const validTracks = tracks.filter((track: any) =>
+      track.preview &&
       track.type === 'track' &&
-      track.title.length < 50 &&
-      isTurkishTitle(track.title, track.artist.name) &&
-      !excludedWords.some(word => track.title.toLowerCase().includes(word))
+      isValidTitle(track.title, track.artist.name)
     );
 
-    if (turkishTracks.length > 0) {
-      // Rastgele bir şarkı seç
-      const randomTrack = turkishTracks[Math.floor(Math.random() * turkishTracks.length)];
-      
-      // Doğru cevabı oluştur
-      const correctTrack: Track = {
-        id: randomTrack.id.toString(),
-        title: randomTrack.title,
-        thumbnail: randomTrack.album.cover_medium,
-        preview: randomTrack.preview,
-        artist: randomTrack.artist.name,
-        album: randomTrack.album.title
-      };
+    if (validTracks.length === 0) throw new Error('Uygun şarkı bulunamadı.');
 
-      // Benzer şarkıları al
-      const similarTracks = await getSimilarTracks(randomTrack.artist.name, randomTrack.title);
-      
-      // Tüm seçenekleri oluştur
-      const allOptions = [
-        { title: correctTrack.title, artist: correctTrack.artist },
-        ...similarTracks
-      ];
+    const selected = validTracks[Math.floor(Math.random() * validTracks.length)];
 
-      // Seçenekleri karıştır
-      const shuffledOptions = shuffleArray(allOptions);
-      
-      // Doğru cevabın yeni indexini bul
-      const correctIndex = shuffledOptions.findIndex(
-        option => option.title === correctTrack.title && option.artist === correctTrack.artist
-      );
+    const correctTrack: Track = {
+      id: selected.id.toString(),
+      title: selected.title,
+      thumbnail: selected.album.cover_medium,
+      preview: selected.preview,
+      artist: selected.artist.name,
+      album: selected.album.title
+    };
 
-      return {
-        correctTrack,
-        options: shuffledOptions,
-        correctIndex
-      };
-    }
+    const distractors = await getSimilarTracks(correctTrack.artist, correctTrack.title);
+    const allOptions = shuffleArray([
+      { title: correctTrack.title, artist: correctTrack.artist },
+      ...distractors
+    ]);
 
-    throw new Error('Hiçbir şarkı bulunamadı! Lütfen tekrar deneyin.');
-  } catch (error) {
-    console.error('Şarkı getirme hatası:', error);
-    throw error;
+    const correctIndex = allOptions.findIndex(
+      opt => opt.title === correctTrack.title && opt.artist === correctTrack.artist
+    );
+
+    return {
+      correctTrack,
+      options: allOptions,
+      correctIndex
+    };
+  } catch (err) {
+    console.error('Quiz oluşturulamadı:', err);
+    throw err;
   }
-} 
+}

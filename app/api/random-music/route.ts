@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server';
-import { getRandomTurkishMusic } from '@/app/utils/music';
+import { getRandom90sPopQuiz } from '@/app/utils/music';
 
 export async function GET() {
   try {
-    const track = await getRandomTurkishMusic();
-    return NextResponse.json(track);
+    const quiz = await getRandom90sPopQuiz();
+    return NextResponse.json(quiz);
   } catch (error) {
     return NextResponse.json(
       { error: 'Bir hata oluştu' },
