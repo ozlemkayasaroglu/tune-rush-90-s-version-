@@ -7,14 +7,15 @@ const gameRooms = new Map<string, GameRoom>();
 
 export async function POST(request: Request) {
   try {
-    const { playerName } = await request.json();
+    const { playerName, profileImage, prize } = await request.json();
     
     // Create new player
     const player: Player = {
       id: uuidv4(),
       name: playerName,
       score: 0,
-      isReady: false
+      isReady: false,
+      profileImage,
     };
 
     // Create new game room
@@ -24,7 +25,7 @@ export async function POST(request: Request) {
       currentRound: 0,
       maxRounds: 10,
       status: 'waiting',
-      scores: {}
+      prize,
     };
 
     gameRooms.set(room.id, room);
