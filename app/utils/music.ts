@@ -9,6 +9,7 @@ interface DeezerTrack {
   artist: string;
   album?: string;
   release_date?: string;
+  album_cover?: string;
 }
 
 const pop90sArtists = [
@@ -226,6 +227,7 @@ async function getTrackById(id: string): Promise<DeezerTrack | null> {
       ...data,
       album: data.album ?? "",
       release_date: data.release_date ?? "",
+      album_cover: data.album_cover ?? data.thumbnail ?? "",
     };
   } catch (error) {
     console.error('Şarkı getirme hatası:', error);
@@ -345,6 +347,7 @@ export async function getRandom90sPopQuiz(): Promise<QuizQuestion> {
           wrongTrack.artist = wrongSong.artist;
           wrongTrack.album = wrongTrack.album ?? "";
           wrongTrack.release_date = wrongTrack.release_date ?? "";
+          wrongTrack.album_cover = wrongTrack.album_cover ?? wrongTrack.thumbnail ?? "";
           wrongTracks.push(wrongTrack);
           usedIndices.add(randomIndex);
         }
@@ -357,17 +360,22 @@ export async function getRandom90sPopQuiz(): Promise<QuizQuestion> {
     }
 
     // Fisher-Yates shuffle algoritması ile seçenekleri karıştır
-    const allOptions = [correctTrack, ...wrongTracks].map(track => ({
-      ...track,
-      album: track.album ?? "",
-      release_date: track.release_date ?? "",
-    }));
+    const allOptions = [
+      correctTrack,
+      ...wrongTracks.map(track => ({
+        ...track,
+        album: track.album ?? "",
+        release_date: track.release_date ?? "",
+        album_cover: track.album_cover ?? track.thumbnail ?? ""
+      }))
+    ].sort(() => Math.random() - 0.5);
     
     return {
       correctTrack: {
         ...correctTrack,
         album: correctTrack.album ?? "",
         release_date: correctTrack.release_date ?? "",
+        album_cover: correctTrack.album_cover ?? correctTrack.thumbnail ?? ""
       },
       options: allOptions,
     };
