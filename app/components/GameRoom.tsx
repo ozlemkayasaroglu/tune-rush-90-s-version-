@@ -247,22 +247,9 @@ export default function GameRoom() {
                           key={option.id}
                           onClick={() => handleAnswer(option)}
                           disabled={selectedAnswer !== null}
-                          className={`w-full p-4 rounded-lg shadow-sm transition-all duration-200 flex items-center space-x-4 ${getOptionStyle(option, selectedAnswer?.id === option.id)}`}
+                          className={`w-full p-4 rounded-lg shadow-sm transition-all duration-200 ${getOptionStyle(option, selectedAnswer?.id === option.id)}`}
                         >
-                          <div className="w-12 h-12 rounded-lg overflow-hidden bg-gray-200">
-                            <Image
-                              src={option.album_cover || '/default-album.png'}
-                              alt={option.title}
-                              width={48}
-                              height={48}
-                              className="w-full h-full object-cover"
-                              onError={(e) => {
-                                const target = e.target as HTMLImageElement;
-                                target.src = '/default-album.png';
-                              }}
-                            />
-                          </div>
-                          <div className="flex-1 text-left">
+                          <div className="text-left">
                             <p className="font-medium">{option.title}</p>
                             <p className="text-sm opacity-75">{option.artist}</p>
                           </div>
