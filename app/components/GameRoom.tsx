@@ -101,6 +101,7 @@ export default function GameRoom() {
     setSelectedAnswer(selectedTrack);
     const isCorrect = selectedTrack?.id === currentQuestion?.correctTrack.id;
     setIsCorrect(isCorrect);
+    setShowResult(true);
     
     if (isCorrect) {
       setScore(prev => prev + 1);
@@ -242,7 +243,7 @@ export default function GameRoom() {
                         <button
                           key={option.id}
                           onClick={() => handleAnswer(option)}
-                          disabled={gameStatus === 'finished'}
+                          disabled={selectedAnswer !== null}
                           className={`w-full p-4 rounded-lg shadow-sm transition-all duration-200 flex items-center space-x-4 ${getOptionStyle(option, selectedAnswer?.id === option.id)}`}
                         >
                           <div className="w-12 h-12 rounded-lg overflow-hidden">
