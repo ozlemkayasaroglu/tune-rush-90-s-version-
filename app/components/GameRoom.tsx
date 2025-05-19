@@ -249,13 +249,17 @@ export default function GameRoom() {
                           disabled={selectedAnswer !== null}
                           className={`w-full p-4 rounded-lg shadow-sm transition-all duration-200 flex items-center space-x-4 ${getOptionStyle(option, selectedAnswer?.id === option.id)}`}
                         >
-                          <div className="w-12 h-12 rounded-lg overflow-hidden">
+                          <div className="w-12 h-12 rounded-lg overflow-hidden bg-gray-200">
                             <Image
-                              src={option.album_cover}
+                              src={option.album_cover || '/default-album.png'}
                               alt={option.title}
                               width={48}
                               height={48}
                               className="w-full h-full object-cover"
+                              onError={(e) => {
+                                const target = e.target as HTMLImageElement;
+                                target.src = '/default-album.png';
+                              }}
                             />
                           </div>
                           <div className="flex-1 text-left">
