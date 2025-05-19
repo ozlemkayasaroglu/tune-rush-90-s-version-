@@ -1,8 +1,25 @@
 export interface Player {
   id: string;
   name: string;
+  profileImage: string;
   score: number;
   isReady: boolean;
+}
+
+export interface Track {
+  id: string;
+  title: string;
+  artist: string;
+  preview: string | null;
+  thumbnail: string;
+  album: string;
+  release_date: string;
+  album_cover: string;
+}
+
+export interface QuizQuestion {
+  correctTrack: Track;
+  options: Track[];
 }
 
 export interface GameRoom {
@@ -10,26 +27,22 @@ export interface GameRoom {
   players: Player[];
   currentRound: number;
   maxRounds: number;
-  status: 'waiting' | 'playing' | 'finished';
-  currentQuestion?: QuizQuestion;
-  scores: Record<string, number>;
+  status: GameStatus;
+  prize: string;
 }
 
-export interface QuizQuestion {
-  correctTrack: {
-    id: string;
-    title: string;
-    thumbnail: string;
-    preview: string;
-    artist: string;
-    album: string;
-  };
-  options: {
-    title: string;
-    artist: string;
-  }[];
-  correctIndex: number;
+export type GameStatus = 'setup' | 'waiting' | 'playing' | 'finished';
+
+export interface GameHistoryItem {
+  round: number;
+  playerId: string;
+  playerName: string;
+  question: QuizQuestion;
+  answer: string;
+  isCorrect: boolean;
 }
+
+export type GameHistory = GameHistoryItem[];
 
 export interface GameState {
   room: GameRoom;

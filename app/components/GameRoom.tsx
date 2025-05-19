@@ -1,6 +1,7 @@
 import { useGame } from '../context/GameContext';
 import { useEffect, useRef, useState } from 'react';
 import { Track } from '../types/game';
+import Image from 'next/image';
 
 export default function GameRoom() {
   const {
@@ -13,6 +14,7 @@ export default function GameRoom() {
     setCurrentQuestion,
     setScore,
     score,
+    prize,
   } = useGame();
 
   const [isPlaying, setIsPlaying] = useState(false);
@@ -114,6 +116,20 @@ export default function GameRoom() {
     }, 2000);
   };
 
+  const getOptionStyle = (option: Track, isSelected: boolean) => {
+    if (selectedAnswer) {
+      if (option.id === currentQuestion?.correctTrack.id) {
+        return 'bg-green-500 hover:bg-green-600 text-white';
+      }
+      if (isSelected && option.id !== currentQuestion?.correctTrack.id) {
+        return 'bg-red-500 hover:bg-red-600 text-white';
+      }
+    }
+    return isSelected 
+      ? 'bg-blue-500 hover:bg-blue-600 text-white' 
+      : 'bg-white hover:bg-gray-100 text-gray-800';
+  };
+
   if (gameStatus === 'setup') return null;
 
   return (
@@ -124,11 +140,8 @@ export default function GameRoom() {
           <div className="relative z-10">
             {gameStatus === 'playing' && currentQuestion && (
               <>
-                <header className="text-center mb-8">
-                  <h1 className="text-3xl md:text-4xl font-bold text-slate-800 mb-2 tracking-tight">
-                    Tur <span className="text-emerald-600">{round}</span>
-                  </h1>
-                  <div className="flex justify-center items-center space-x-4 mb-4">
+                <header className="text-center mb-4">
+                  <div className="flex justify-center items-center space-x-6">
                     {players.map((player, index) => (
                       <div
                         key={player.id}
@@ -136,12 +149,26 @@ export default function GameRoom() {
                           index === currentPlayerIndex ? 'text-emerald-600' : 'text-slate-600'
                         }`}
                       >
-                        <div className="text-2xl">{player.profileImage}</div>
-                        <span className="text-sm font-medium">{player.name}</span>
-                        {index === currentPlayerIndex && (
-                          <span className="text-xs bg-emerald-100 text-emerald-600 px-2 py-1 rounded-full">
-                            Sıra Sizde
-                          </span>
+                        <div className="flex items-center space-x-2">
+                          <div className="text-2xl" style={{ fontSize: '40px' }}>{player.profileImage}</div>
+                          <div className="flex flex-col justify-center">
+                            <span className={`text-sm font-medium px-2 py-1 rounded-full ${
+                              index === currentPlayerIndex ? 'bg-emerald-100 text-emerald-600' : ''
+                            }`}>
+                              {player.name}
+                            </span>
+                            <span className="text-xs font-medium text-emerald-600 mt-0.5" style={{
+                              textAlign: 'start',
+                              marginLeft: '5px'
+                            }}>
+                              {player.score} puan
+                            </span>
+                          </div>
+                        </div>
+                        {index < players.length - 1 && (
+                          <div className="text-xl font-bold text-slate-400 mx-2">
+                            {players.length > 2 ? '/' : 'VS'}
+                          </div>
                         )}
                       </div>
                     ))}
@@ -149,7 +176,7 @@ export default function GameRoom() {
                 </header>
 
                 <div className="max-w-2xl mx-auto">
-                  <div className="p-6 rounded-xl bg-white/30 backdrop-blur-sm border border-white/40 mb-8">
+                  <div className="p-4 rounded-xl bg-white/30 backdrop-blur-sm border border-white/40 mb-4">
                     {/* Progress Bar */}
                     {!showResult && (
                       <div className="mb-6">
@@ -174,7 +201,7 @@ export default function GameRoom() {
                         src={currentQuestion.correctTrack.thumbnail}
                         alt="Şarkı kapağı"
                         className={`w-full h-full object-cover transition-all duration-500 ${
-                          isCorrect ? 'blur-none scale-100' : 'blur-md scale-105'
+                          isCorrect ? 'blur-none scale-100' : 'blur-xl scale-105'
                         }`}
                       />
                       {isPlaying && !showResult && (
@@ -211,24 +238,25 @@ export default function GameRoom() {
                     </div>
 
                     <div className="space-y-3">
-                      {currentQuestion.options.map((option, index) => (
+                      {currentQuestion.options.map((option) => (
                         <button
-                          key={index}
+                          key={option.id}
                           onClick={() => handleAnswer(option)}
-                          disabled={selectedAnswer !== null}
-                          className={`w-full p-4 mb-2 rounded-lg text-left transition-colors ${
-                            selectedAnswer === option
-                              ? option === currentQuestion.correctTrack
-                                ? 'bg-green-500 text-white'
-                                : 'bg-red-500 text-white'
-                              : 'bg-white hover:bg-gray-100'
-                          }`}
+                          disabled={gameStatus === 'finished'}
+                          className={`w-full p-4 rounded-lg shadow-sm transition-all duration-200 flex items-center space-x-4 ${getOptionStyle(option, selectedAnswer?.id === option.id)}`}
                         >
-                          <div className="text-gray-500">
-                            {option.title} - {option.artist}
+                          <div className="w-12 h-12 rounded-lg overflow-hidden">
+                            <Image
+                              src={option.album_cover}
+                              alt={option.title}
+                              width={48}
+                              height={48}
+                              className="w-full h-full object-cover"
+                            />
                           </div>
-                          <div className="text-sm font-medium text-gray-700 mt-1">
-                            {option.album} • {option.release_date?.slice(0, 4) || 'Bilinmiyor'}
+                          <div className="flex-1 text-left">
+                            <p className="font-medium">{option.title}</p>
+                            <p className="text-sm opacity-75">{option.artist}</p>
                           </div>
                         </button>
                       ))}
@@ -268,9 +296,14 @@ export default function GameRoom() {
                                 {player.score} puan
                               </p>
                               {index === 0 && (
-                                <p className="text-emerald-600 text-sm mt-1">
-                                  Kazanan! 🎉
-                                </p>
+                                <>
+                                  <p className="text-emerald-600 text-sm mt-1">
+                                    Kazanan! 🎉
+                                  </p>
+                                  <p className="text-slate-600 text-sm mt-2">
+                                    Ödül: {prize}
+                                  </p>
+                                </>
                               )}
                             </div>
                           </div>

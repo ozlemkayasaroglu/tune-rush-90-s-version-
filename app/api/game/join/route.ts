@@ -7,7 +7,7 @@ declare const gameRooms: Map<string, any>;
 
 export async function POST(request: Request) {
   try {
-    const { roomId, playerName } = await request.json();
+    const { roomId, playerName, profileImage } = await request.json();
 
     const room = gameRooms.get(roomId);
     if (!room) {
@@ -28,7 +28,8 @@ export async function POST(request: Request) {
       id: uuidv4(),
       name: playerName,
       score: 0,
-      isReady: false
+      isReady: false,
+      profileImage,
     };
 
     room.players.push(player);

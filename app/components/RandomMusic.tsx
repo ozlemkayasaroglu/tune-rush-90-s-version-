@@ -294,7 +294,7 @@ export default function RandomMusic() {
                   ) : (
                     <div className="space-y-2">
                       <p>💪 Daha İyisini Yapabilirsin!</p>
-                      <p>Türkçe rap dünyasını keşfetme zamanı!</p>
+                      <p>90'lar Türkçe pop dünyasını keşfetme zamanı!</p>
                     </div>
                   )}
                 </div>

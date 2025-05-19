@@ -1,19 +1,14 @@
-interface Track {
+import { QuizQuestion } from '../types/game';
+
+// Track interface'ini types/game.ts'den import et
+interface DeezerTrack {
   id: string;
   title: string;
   thumbnail: string;
   preview: string;
   artist: string;
-  album: string;
-}
-
-interface QuizQuestion {
-  correctTrack: Track;
-  options: {
-    title: string;
-    artist: string;
-  }[];
-  correctIndex: number;
+  album?: string;
+  release_date?: string;
 }
 
 const pop90sArtists = [
@@ -81,47 +76,304 @@ async function getSimilarTracks(artist: string, excludeTitle: string): Promise<{
   ).slice(0, 3);
 }
 
+// 90'lar Türkçe Pop Sanatçıları
+const TURKISH_ARTISTS = [
+  'Tarkan',
+  'Sezen Aksu',
+  'Levent Yüksel',
+  'Sertab Erener',
+  'Nilüfer',
+  'Kenan Doğulu',
+  'Barış Manço',
+  'Ajda Pekkan',
+  'Yonca Evcimik',
+  'Nazan Öncel',
+  'Aşkın Nur Yengi',
+  'Çelik',
+  'İzel',
+  'Burak Kut',
+  'Mustafa Sandal',
+  'Sibel Tüzün',
+  'Emel Müftüoğlu',
+  'Yıldız Tilbe',
+  'Serdar Ortaç',
+  'Hakan Peker',
+  'Ebru Gündeş',
+  'Seden Gürel',
+  'Bendeniz',
+  'Sibel Alaş',
+  'Deniz Arcak',
+  'Jale',
+  'Nükhet Duru',
+  'Fatih Erkoç',
+  'Sibel Can',
+  'Harun Kolçak',
+  'Reyhan Karaca'
+];
+
+// 90'lar Türkçe Pop Şarkıları (Deezer ID'leri ile, güncel ve doğru)
+export const TURKISH_SONGS = [
+  {
+    title: "Yaparım Bilirsin",
+    artist: "Kenan Doğulu",
+    deezerId: "144292330"
+  },
+  {
+    title: "Bi' Daha",
+    artist: "Levent Yüksel",
+    deezerId: "66370316"
+  },
+  {
+    title: "Aya Benzer",
+    artist: "Mustafa Sandal",
+    deezerId: "120665598"
+  },
+  {
+    title: "Rakkas",
+    artist: "Sezen Aksu",
+    deezerId: "64074911"
+  },
+  {
+    title: "Gamzelim",
+    artist: "Serdar Ortaç",
+    deezerId: "66134842"
+  },
+  {
+    title: "Ele Güne Karşı",
+    artist: "MFÖ",
+    deezerId: "64366726"
+  },
+  {
+    title: "Beni Unut",
+    artist: "Serdar Ortaç",
+    deezerId: "142353661"
+  },
+  {
+    title: "Seni Yerler",
+    artist: "Sezen Aksu",
+    deezerId: "68334617"
+  },
+  {
+    title: "Ölürüm Sana",
+    artist: "Tarkan",
+    deezerId: "16412332"
+  },
+  {
+    title: "Aldatıldık",
+    artist: "Rengin",
+    deezerId: "78754720"
+  },
+  {
+    title: "Yolcu",
+    artist: "Ali Güven",
+    deezerId: "69014877"
+  },
+  {
+    title: "Mecbursun",
+    artist: "Sertab Erener",
+    deezerId: "66134978"
+  },
+  {
+    title: "Ahmet",
+    artist: "Deniz Seki",
+    deezerId: "118007836"
+  },
+  {
+    title: "Karamela",
+    artist: "Hakan Peker",
+    deezerId: "138675789"
+  },
+  {
+    title: "Kuzu Kuzu",
+    artist: "Tarkan",
+    deezerId: "16412320"
+  },
+  {
+    title: "Sen Başkasın",
+    artist: "Tarkan",
+    deezerId: "16412326"
+  },
+  {
+    title: "Hovarda",
+    artist: "Emel Müftüoğlu",
+    deezerId: "93222982"
+  },
+  {
+    title: "Sevdik Sevdalandık",
+    artist: "Reyhan Karaca",
+    deezerId: "105546612"
+  },
+  {
+    title: "Anoni Niyolay",
+    artist: "Volkan",
+    deezerId: "66731225"
+  },
+  {
+    title: "Dönence",
+    artist: "Barış Manço",
+    deezerId: "66133761"
+  }
+];
+
+async function getTrackById(id: string): Promise<DeezerTrack | null> {
+  try {
+    const response = await fetch(`/api/deezer?id=${id}`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch track');
+    }
+    const data = await response.json();
+    return {
+      ...data,
+      album: data.album ?? "",
+      release_date: data.release_date ?? "",
+    };
+  } catch (error) {
+    console.error('Şarkı getirme hatası:', error);
+    return null;
+  }
+}
+
+async function searchTrack(song: { title: string; artist: string; deezerId: string }): Promise<DeezerTrack | null> {
+  try {
+    // Önce ID ile şarkıyı bulmayı dene
+    const track = await getTrackById(song.deezerId);
+    if (track) {
+      // ID ile bulunan şarkının doğruluğunu kontrol et
+      const isExactMatch = 
+        track.title.toLowerCase().includes(song.title.toLowerCase()) &&
+        track.artist.toLowerCase().includes(song.artist.toLowerCase());
+      
+      if (isExactMatch) {
+        return track;
+      }
+    }
+
+    // ID ile bulunamazsa veya eşleşme yoksa, arama yap
+    const searchResponse = await fetch(`/api/deezer?q=${encodeURIComponent(`${song.title} ${song.artist}`)}`);
+    if (!searchResponse.ok) {
+      throw new Error('Failed to search track');
+    }
+    const searchData = await searchResponse.json();
+
+    if (searchData.data && searchData.data.length > 0) {
+      // Tam eşleşme kontrolü - daha esnek
+      const exactMatch = searchData.data.find((track: DeezerTrack) => {
+        const trackTitle = track.title.toLowerCase();
+        const trackArtist = track.artist.toLowerCase();
+        const searchTitle = song.title.toLowerCase();
+        const searchArtist = song.artist.toLowerCase();
+
+        // Başlık ve sanatçı adının birbirini içermesi yeterli
+        return (trackTitle.includes(searchTitle) || searchTitle.includes(trackTitle)) &&
+               (trackArtist.includes(searchArtist) || searchArtist.includes(trackArtist));
+      });
+
+      if (exactMatch) {
+        return exactMatch;
+      }
+
+      // Tam eşleşme yoksa, en yakın eşleşmeyi bul
+      const bestMatch = searchData.data.reduce((best: DeezerTrack | null, current: DeezerTrack) => {
+        if (!best) return current;
+
+        const currentTitle = current.title.toLowerCase();
+        const currentArtist = current.artist.toLowerCase();
+        const searchTitle = song.title.toLowerCase();
+        const searchArtist = song.artist.toLowerCase();
+
+        // Mevcut en iyi eşleşme ile karşılaştır
+        const currentScore = 
+          (currentTitle.includes(searchTitle) ? 2 : 0) +
+          (currentArtist.includes(searchArtist) ? 2 : 0) +
+          (searchTitle.includes(currentTitle) ? 1 : 0) +
+          (searchArtist.includes(currentArtist) ? 1 : 0);
+
+        const bestScore = 
+          (best.title.toLowerCase().includes(searchTitle) ? 2 : 0) +
+          (best.artist.toLowerCase().includes(searchArtist) ? 2 : 0) +
+          (searchTitle.includes(best.title.toLowerCase()) ? 1 : 0) +
+          (searchArtist.includes(best.artist.toLowerCase()) ? 1 : 0);
+
+        return currentScore > bestScore ? current : best;
+      }, null);
+
+      if (bestMatch) {
+        return bestMatch;
+      }
+    }
+
+    console.warn(`Şarkı bulunamadı: ${song.title} - ${song.artist}`);
+    return null;
+  } catch (error) {
+    console.error('Şarkı arama hatası:', error);
+    return null;
+  }
+}
+
 export async function getRandom90sPopQuiz(): Promise<QuizQuestion> {
   try {
-    const artist = pop90sArtists[Math.floor(Math.random() * pop90sArtists.length)];
-    const tracks = await searchDeezer(artist);
+    // Rastgele bir şarkı seç
+    const randomSong = TURKISH_SONGS[Math.floor(Math.random() * TURKISH_SONGS.length)];
+    
+    // Doğru şarkıyı bul
+    const correctTrack = await searchTrack(randomSong);
+    
+    if (!correctTrack) {
+      // Eğer şarkı bulunamazsa, başka bir şarkı dene
+      return getRandom90sPopQuiz();
+    }
 
-    const validTracks = tracks.filter((track: any) =>
-      track.preview &&
-      track.type === 'track' &&
-      isValidTitle(track.title, track.artist.name)
-    );
+    // Doğru şarkının bilgilerini güncelle
+    correctTrack.title = randomSong.title;
+    correctTrack.artist = randomSong.artist;
+    correctTrack.album = correctTrack.album ?? "";
+    correctTrack.release_date = correctTrack.release_date ?? "";
+    
+    // Yanlış cevaplar için rastgele şarkılar seç
+    const wrongTracks: DeezerTrack[] = [];
+    const usedIndices = new Set<number>();
+    
+    while (wrongTracks.length < 3) {
+      const randomIndex = Math.floor(Math.random() * TURKISH_SONGS.length);
+      if (!usedIndices.has(randomIndex) && TURKISH_SONGS[randomIndex].deezerId !== randomSong.deezerId) {
+        const wrongSong = TURKISH_SONGS[randomIndex];
+        const wrongTrack = await searchTrack(wrongSong);
+        
+        if (wrongTrack) {
+          // Yanlış şarkının bilgilerini güncelle
+          wrongTrack.title = wrongSong.title;
+          wrongTrack.artist = wrongSong.artist;
+          wrongTrack.album = wrongTrack.album ?? "";
+          wrongTrack.release_date = wrongTrack.release_date ?? "";
+          wrongTracks.push(wrongTrack);
+          usedIndices.add(randomIndex);
+        }
+      }
+    }
 
-    if (validTracks.length === 0) throw new Error('Uygun şarkı bulunamadı.');
+    // Eğer yeterli yanlış cevap bulunamazsa, baştan başla
+    if (wrongTracks.length < 3) {
+      return getRandom90sPopQuiz();
+    }
 
-    const selected = validTracks[Math.floor(Math.random() * validTracks.length)];
-
-    const correctTrack: Track = {
-      id: selected.id.toString(),
-      title: selected.title,
-      thumbnail: selected.album.cover_medium,
-      preview: selected.preview,
-      artist: selected.artist.name,
-      album: selected.album.title
-    };
-
-    const distractors = await getSimilarTracks(correctTrack.artist, correctTrack.title);
-    const allOptions = shuffleArray([
-      { title: correctTrack.title, artist: correctTrack.artist },
-      ...distractors
-    ]);
-
-    const correctIndex = allOptions.findIndex(
-      opt => opt.title === correctTrack.title && opt.artist === correctTrack.artist
-    );
-
+    // Fisher-Yates shuffle algoritması ile seçenekleri karıştır
+    const allOptions = [correctTrack, ...wrongTracks].map(track => ({
+      ...track,
+      album: track.album ?? "",
+      release_date: track.release_date ?? "",
+    }));
+    
     return {
-      correctTrack,
+      correctTrack: {
+        ...correctTrack,
+        album: correctTrack.album ?? "",
+        release_date: correctTrack.release_date ?? "",
+      },
       options: allOptions,
-      correctIndex
     };
-  } catch (err) {
-    console.error('Quiz oluşturulamadı:', err);
-    throw err;
+  } catch (error) {
+    console.error('Quiz oluşturulurken hata:', error);
+    // Hata durumunda yeni bir quiz dene
+    return getRandom90sPopQuiz();
   }
 }

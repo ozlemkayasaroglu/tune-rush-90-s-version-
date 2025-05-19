@@ -8,8 +8,8 @@ const geist = Geist({
 });
 
 export const metadata: Metadata = {
-  title: "Türkçe Rap Quiz",
-  description: "Türkçe rap şarkılarını tahmin etme oyunu",
+  title: "90's Türkçe Pop Quiz",
+  description: "90'lar Türkçe pop şarkılarını tahmin etme oyunu",
 };
 
 export default function RootLayout({
