@@ -4,6 +4,10 @@ Bu proje, [@AtaKNY/tune-rush](https://github.com/AtaKNY/tune-rush) projesinden i
 
 Tune Rush, 90'lar Türkçe pop müzik bilginizi test edebileceğiniz interaktif bir quiz oyunudur. Deezer API'si üzerinden rastgele 90'lar Türkçe pop şarkıları getirir ve kullanıcıya 4 şık sunar.
 
+## 🎮 Canlı Demo
+
+Oyunu hemen oynamak için: [Tune Rush - 90'lar Versiyonu](https://tune-rush-90-s-version-elkh5ldgf-ozlemkayasaroglus-projects.vercel.app)
+
 ## 🎵 Oyun Özellikleri
 
 - 10 soruluk quiz formatı
@@ -63,6 +67,20 @@ npm run dev
 4. Tarayıcınızda açın:
 ```
 http://localhost:3000
+```
+
+## 🚀 Deployment
+
+Projeyi Vercel üzerinde deploy etmek için:
+
+1. Vercel CLI'ı yükleyin:
+```bash
+npm i -g vercel
+```
+
+2. Projeyi deploy edin:
+```bash
+vercel deploy --prod
 ```
 
 ## 🎯 Gelecek Özellikler
