@@ -119,13 +119,16 @@ export default function GameRoom() {
 
   const getOptionStyle = (option: Track, isSelected: boolean) => {
     if (selectedAnswer) {
+      // Doğru cevap her zaman yeşil olmalı
       if (option.id === currentQuestion?.correctTrack.id) {
         return 'bg-green-500 hover:bg-green-600 text-white';
       }
-      if (isSelected && option.id !== currentQuestion?.correctTrack.id) {
+      // Seçilen yanlış cevap kırmızı olmalı
+      if (isSelected) {
         return 'bg-red-500 hover:bg-red-600 text-white';
       }
     }
+    // Normal durum
     return isSelected 
       ? 'bg-blue-500 hover:bg-blue-600 text-white' 
       : 'bg-white hover:bg-gray-100 text-gray-800';
