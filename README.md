@@ -105,6 +105,7 @@ Bu proje MIT lisansı altında lisanslanmıştır.
 Bu projenin geliştirilmesinde değerli katkıları ve destekleri için:
 
 - [@AtaKNY/tune-rush](https://github.com/AtaKNY/tune-rush) projesine
+- [zenCoders](https://github.com/zenCoders) ekibine
 - Tüm katkıda bulunanlara
 
 içtenlikle teşekkür ederim. 🙌
