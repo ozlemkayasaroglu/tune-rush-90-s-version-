@@ -1,10 +1,10 @@
 # 🎵 Tune Rush - 90'lar Türkçe Pop Quiz Oyunu
 
-Bu proje, [@AtaKNY/tune-rush](https://github.com/AtaKNY/tune-rush) projesinden ilham alınarak geliştirilmiştir. ZenCoders topluluğu tarafından desteklenen bir projedir.
+Bu proje, [@AtaKNY/tune-rush](https://github.com/AtaKNY/tune-rush) projesinden ilham alınarak geliştirilmiştir.
 
 Tune Rush, 90'lar Türkçe pop müzik bilginizi test edebileceğiniz interaktif bir quiz oyunudur. Deezer API'si üzerinden rastgele 90'lar Türkçe pop şarkıları getirir ve kullanıcıya 4 şık sunar.
 
-## �� Oyun Özellikleri
+## 🎵 Oyun Özellikleri
 
 - 10 soruluk quiz formatı
 - Her soru için 15 saniye süre
@@ -87,7 +87,6 @@ Bu proje MIT lisansı altında lisanslanmıştır.
 Bu projenin geliştirilmesinde değerli katkıları ve destekleri için:
 
 - [@AtaKNY/tune-rush](https://github.com/AtaKNY/tune-rush) projesine
-- ZenCoders topluluğuna
 - Tüm katkıda bulunanlara
 
 içtenlikle teşekkür ederim. 🙌
