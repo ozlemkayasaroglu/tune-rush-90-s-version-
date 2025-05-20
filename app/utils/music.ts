@@ -165,11 +165,6 @@ export const TURKISH_SONGS = [
     deezerId: "78754720"
   },
   {
-    title: "Yolcu",
-    artist: "Ali Güven",
-    deezerId: "69014877"
-  },
-  {
     title: "Mecbursun",
     artist: "Sertab Erener",
     deezerId: "66134978"
@@ -385,3 +380,78 @@ export async function getRandom90sPopQuiz(): Promise<QuizQuestion> {
     return getRandom90sPopQuiz();
   }
 }
+
+export const TURKISH_90S_POP = [
+  {
+    title: "Gülümse",
+    artist: "Sezen Aksu",
+    preview: "https://cdns-preview-9.dzcdn.net/stream/c-9c9c9c9c9c9c9c9c9c9c9c9c9c9c9c9c-128.mp3",
+    album: "Gülümse",
+    release_date: "1991",
+    album_cover: "https://e-cdns-images.dzcdn.net/images/cover/9c9c9c9c9c9c9c9c9c9c9c9c9c9c9c9c/500x500-000000-80-0-0.jpg"
+  },
+  {
+    title: "Şımarık",
+    artist: "Tarkan",
+    preview: "https://cdns-preview-8.dzcdn.net/stream/c-8c8c8c8c8c8c8c8c8c8c8c8c8c8c8c8c-128.mp3",
+    album: "Ölürüm Sana",
+    release_date: "1997",
+    album_cover: "https://e-cdns-images.dzcdn.net/images/cover/8c8c8c8c8c8c8c8c8c8c8c8c8c8c8c8c/500x500-000000-80-0-0.jpg"
+  },
+  {
+    title: "Kuzu Kuzu",
+    artist: "Tarkan",
+    preview: "https://cdns-preview-7.dzcdn.net/stream/c-7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c-128.mp3",
+    album: "Karma",
+    release_date: "2001",
+    album_cover: "https://e-cdns-images.dzcdn.net/images/cover/7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c/500x500-000000-80-0-0.jpg"
+  },
+  {
+    title: "Şıkıdım",
+    artist: "Tarkan",
+    preview: "https://cdns-preview-6.dzcdn.net/stream/c-6c6c6c6c6c6c6c6c6c6c6c6c6c6c6c6c-128.mp3",
+    album: "Ölürüm Sana",
+    release_date: "1997",
+    album_cover: "https://e-cdns-images.dzcdn.net/images/cover/6c6c6c6c6c6c6c6c6c6c6c6c6c6c6c6c/500x500-000000-80-0-0.jpg"
+  },
+  {
+    title: "Bebek",
+    artist: "Sezen Aksu",
+    preview: "https://cdns-preview-5.dzcdn.net/stream/c-5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c-128.mp3",
+    album: "Bebek",
+    release_date: "1991",
+    album_cover: "https://e-cdns-images.dzcdn.net/images/cover/5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c/500x500-000000-80-0-0.jpg"
+  },
+  {
+    title: "Aşk",
+    artist: "Sezen Aksu",
+    preview: "https://cdns-preview-4.dzcdn.net/stream/c-4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c-128.mp3",
+    album: "Aşk",
+    release_date: "1995",
+    album_cover: "https://e-cdns-images.dzcdn.net/images/cover/4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c/500x500-000000-80-0-0.jpg"
+  },
+  {
+    title: "Gülümse",
+    artist: "Sezen Aksu",
+    preview: "https://cdns-preview-3.dzcdn.net/stream/c-3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c-128.mp3",
+    album: "Gülümse",
+    release_date: "1991",
+    album_cover: "https://e-cdns-images.dzcdn.net/images/cover/3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c/500x500-000000-80-0-0.jpg"
+  },
+  {
+    title: "Şımarık",
+    artist: "Tarkan",
+    preview: "https://cdns-preview-2.dzcdn.net/stream/c-2c2c2c2c2c2c2c2c2c2c2c2c2c2c2c2c-128.mp3",
+    album: "Ölürüm Sana",
+    release_date: "1997",
+    album_cover: "https://e-cdns-images.dzcdn.net/images/cover/2c2c2c2c2c2c2c2c2c2c2c2c2c2c2c2c/500x500-000000-80-0-0.jpg"
+  },
+  {
+    title: "Kuzu Kuzu",
+    artist: "Tarkan",
+    preview: "https://cdns-preview-1.dzcdn.net/stream/c-1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c-128.mp3",
+    album: "Karma",
+    release_date: "2001",
+    album_cover: "https://e-cdns-images.dzcdn.net/images/cover/1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c/500x500-000000-80-0-0.jpg"
+  }
+];

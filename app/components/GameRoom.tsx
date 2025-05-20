@@ -246,13 +246,10 @@ export default function GameRoom() {
                         <button
                           key={option.id}
                           onClick={() => handleAnswer(option)}
+                          className={`w-full p-3 rounded-lg transition-all duration-300 ${getOptionStyle(option, selectedAnswer?.id === option.id)}`}
                           disabled={selectedAnswer !== null}
-                          className={`w-full p-4 rounded-lg shadow-sm transition-all duration-200 ${getOptionStyle(option, selectedAnswer?.id === option.id)}`}
                         >
-                          <div className="text-left">
-                            <p className="font-medium">{option.title}</p>
-                            <p className="text-sm opacity-75">{option.artist}</p>
-                          </div>
+                          <p className="text-base font-medium tracking-tight">{option.title}</p>
                         </button>
                       ))}
                     </div>

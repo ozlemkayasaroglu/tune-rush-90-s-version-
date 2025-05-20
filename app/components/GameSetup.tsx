@@ -12,7 +12,7 @@ const AVATARS = [
 export default function GameSetup() {
   const { gameStatus, setPlayers, startGame } = useGame();
   const [players, setLocalPlayers] = useState([
-    { name: 'Player 1', avatar: AVATARS[0] }
+    { name: '', avatar: AVATARS[0] }
   ]);
   const [error, setError] = useState('');
   const [prize, setPrize] = useState('');
@@ -48,7 +48,7 @@ export default function GameSetup() {
       setError('En fazla 4 oyuncu ekleyebilirsiniz');
       return;
     }
-    setLocalPlayers([...players, { name: `Player ${players.length + 1}`, avatar: AVATARS[players.length] }]);
+    setLocalPlayers([...players, { name: '', avatar: AVATARS[players.length] }]);
     setError('');
   };
 
@@ -98,14 +98,6 @@ export default function GameSetup() {
                         placeholder={`Player ${index + 1}`}
                         className="flex-1 p-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                       />
-                      <button
-                        onClick={() => removePlayer(index)}
-                        className="p-2 text-red-500 hover:text-red-600 transition-colors"
-                      >
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                      </button>
                     </div>
                   ))}
                 </div>
