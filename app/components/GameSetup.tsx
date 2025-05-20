@@ -87,78 +87,25 @@ export default function GameSetup() {
             <div className="max-w-md mx-auto">
               <div className="p-6 rounded-xl bg-white/30 backdrop-blur-sm border border-white/40 mb-8">
                 <h2 className="text-2xl font-bold text-slate-800 mb-4 text-center">Oyuncu Ayarları</h2>
-                <div className="space-y-6">
+                <div className="space-y-4">
                   {players.map((player, index) => (
-                    <div key={index} className="flex items-center space-x-3 group">
-                      <label
-                        htmlFor={`avatar-input-${index}`}
-                        className="cursor-pointer relative w-16 h-16 rounded-full bg-slate-200 flex items-center justify-center overflow-hidden shrink-0 text-3xl"
-                        title="Avatar Seç"
+                    <div key={index} className="flex items-center space-x-4">
+                      <div className="text-2xl" style={{ fontSize: '40px' }}>{player.avatar}</div>
+                      <input
+                        type="text"
+                        value={player.name}
+                        onChange={(e) => updatePlayer(index, 'name', e.target.value)}
+                        placeholder={`Player ${index + 1}`}
+                        className="flex-1 p-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                      />
+                      <button
+                        onClick={() => removePlayer(index)}
+                        className="p-2 text-red-500 hover:text-red-600 transition-colors"
                       >
-                        {player.avatar}
-                        <select
-                          id={`avatar-input-${index}`}
-                          value={player.avatar}
-                          onChange={(e) => updatePlayer(index, 'avatar', e.target.value)}
-                          className="absolute inset-0 opacity-0 cursor-pointer"
-                        >
-                          {AVATARS.map((avatar) => (
-                            <option key={avatar} value={avatar}>
-                              {avatar}
-                            </option>
-                          ))}
-                        </select>
-                        <div className="absolute bottom-0 right-0 bg-slate-300 rounded-full p-1">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="16"
-                            height="16"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            className="text-slate-700"
-                          >
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                            <polyline points="17 8 12 3 7 8"></polyline>
-                            <line x1="12" x2="12" y1="3" y2="15"></line>
-                          </svg>
-                        </div>
-                      </label>
-                      <div className="flex-1 flex items-center space-x-2">
-                        <input
-                          type="text"
-                          placeholder={`Player ${index + 1}`}
-                          value={player.name}
-                          onChange={(e) => updatePlayer(index, 'name', e.target.value)}
-                          className="flex-1 px-4 py-2 rounded-lg bg-white/50 border border-slate-200 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-400 transition-all"
-                          maxLength={15}
-                        />
-                        {players.length > 1 && (
-                          <button
-                            onClick={() => removePlayer(index)}
-                            className="p-2 text-slate-400 hover:text-slate-600 transition-colors"
-                            title="Oyuncuyu Kaldır"
-                          >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="20"
-                              height="20"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            >
-                              <line x1="18" y1="6" x2="6" y2="18"></line>
-                              <line x1="6" y1="6" x2="18" y2="18"></line>
-                            </svg>
-                          </button>
-                        )}
-                      </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
                     </div>
                   ))}
                 </div>
