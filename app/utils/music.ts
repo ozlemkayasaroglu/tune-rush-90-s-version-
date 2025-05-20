@@ -115,6 +115,176 @@ const TURKISH_ARTISTS = [
 // 90'lar Türkçe Pop Şarkıları (Deezer ID'leri ile, güncel ve doğru)
 export const TURKISH_SONGS = [
   {
+    title: "Yeniden Başlasın",
+    artist: "Yeşim Salkım",
+    deezerId: "66195742"
+  },
+  {
+    title: "Bu Aşk Fazla Sana",
+    artist: "Şebnem Ferah",
+    deezerId: "68055350"
+  },
+  {
+    title: "Ben Adam Olmam",
+    artist: "Serdar Ortaç",
+    deezerId: "66134834"
+  },
+  {
+    title: "Vurula Vurula",
+    artist: "Yonca Evcimik",
+    deezerId: "66211370"
+  },
+  {
+    title: "Yanlışsın",
+    artist: "Ayşegül Aldinç",
+    deezerId: "66195555"
+  },
+  {
+    title: "Umrumda Değil",
+    artist: "Candan Erçetin",
+    deezerId: "63529470"
+  },
+  {
+    title: "Kır Zincirleri",
+    artist: "Tarkan",
+    deezerId: "16412335"
+  },
+  {
+    title: "Ateşteyim",
+    artist: "Çelik",
+    deezerId: "66135144"
+  },
+  {
+    title: "Tövbekar",
+    artist: "Soner Arıca",
+    deezerId: "66411327"
+  },
+  {
+    title: "Tatlı Kaçık",
+    artist: "Yonca Evcimik",
+    deezerId: "66211369"
+  },
+  {
+    title: "Benimle Oynama",
+    artist: "Burak Kut",
+    deezerId: "68934169"
+  },
+  {
+    title: "Alimallah",
+    artist: "Ayşegül Aldinç",
+    deezerId: "66195647"
+  },
+  {
+    title: "Tutunup Kendime",
+    artist: "Ajlan",
+    deezerId: "453327882"
+  },
+  {
+    title: "Yaşasın",
+    artist: "Harun Kolçak",
+    deezerId: "361336831"
+  },
+  {
+    title: "Şımarık",
+    artist: "Tarkan",
+    deezerId: "16412330"
+  },
+  {
+    title: "Ya Seninle Ya Sensiz",
+    artist: "Seçil",
+    deezerId: "66411271"
+  },
+  {
+    title: "Eğlen Güzelim",
+    artist: "Ajda Pekkan",
+    deezerId: "66157547"
+  },
+  {
+    title: "Tamam (Sustum)",
+    artist: "Vega",
+    deezerId: "77490302"
+  },
+  {
+    title: "Ölürüm Sana",
+    artist: "Tarkan",
+    deezerId: "16412332"
+  },
+  {
+    title: "Kinali Bebek",
+    artist: "Demet Sağıroğlu",
+    deezerId: "71415051"
+  },
+  {
+    title: "Yok Yere",
+    artist: "İzel",
+    deezerId: "66135067"
+  },
+  {
+    title: "Sus Konuşma",
+    artist: "Teoman",
+    deezerId: "531230921"
+  },
+  {
+    title: "Vurulmuşum Sana",
+    artist: "Asya",
+    deezerId: "85540046"
+  },
+  {
+    title: "Seni Bana Vermediler",
+    artist: "Gökhan Tepe",
+    deezerId: "82360114"
+  },
+  {
+    title: "Kış Güneşi",
+    artist: "Tarkan",
+    deezerId: "16412311"
+  },
+  {
+    title: "Alışamadım",
+    artist: "Sibel Bilgiç",
+    deezerId: "1242108802"
+  },
+  {
+    title: "Deli Yaz",
+    artist: "Zerrin Özer",
+    deezerId: "71344792"
+  },
+  {
+    title: "Rüzgar",
+    artist: "Gündoğarken",
+    deezerId: "66135427"
+  },
+  {
+    title: "Aldatıldık",
+    artist: "Rengin",
+    deezerId: "78754720"
+  },
+  {
+    title: "Be Adam",
+    artist: "Gülşen",
+    deezerId: "66195684"
+  },
+  {
+    title: "Ben Tabii Ki",
+    artist: "Ümit Sayın",
+    deezerId: "5612373"
+  },
+  {
+    title: "Delice Bir Sevda",
+    artist: "Ege",
+    deezerId: "63577483"
+  },
+  {
+    title: "Vazgeçtim",
+    artist: "Yıldız Tilbe",
+    deezerId: "85004985"
+  },
+  {
+    title: "Arnavut Kaldirimi",
+    artist: "Demet Sağıroğlu",
+    deezerId: "71415057"
+  },
+  {
     title: "Yaparım Bilirsin",
     artist: "Kenan Doğulu",
     deezerId: "144292330"
@@ -153,16 +323,6 @@ export const TURKISH_SONGS = [
     title: "Seni Yerler",
     artist: "Sezen Aksu",
     deezerId: "68334617"
-  },
-  {
-    title: "Ölürüm Sana",
-    artist: "Tarkan",
-    deezerId: "16412332"
-  },
-  {
-    title: "Aldatıldık",
-    artist: "Rengin",
-    deezerId: "78754720"
   },
   {
     title: "Mecbursun",
@@ -235,6 +395,12 @@ async function searchTrack(song: { title: string; artist: string; deezerId: stri
     // Önce ID ile şarkıyı bulmayı dene
     const track = await getTrackById(song.deezerId);
     if (track) {
+      // Preview URL kontrolü
+      if (!track.preview) {
+        console.warn(`Preview URL bulunamadı: ${song.title} - ${song.artist}`);
+        return null;
+      }
+
       // ID ile bulunan şarkının doğruluğunu kontrol et
       const isExactMatch = 
         track.title.toLowerCase().includes(song.title.toLowerCase()) &&
@@ -253,14 +419,15 @@ async function searchTrack(song: { title: string; artist: string; deezerId: stri
     const searchData = await searchResponse.json();
 
     if (searchData.data && searchData.data.length > 0) {
-      // Tam eşleşme kontrolü - daha esnek
+      // Preview URL'si olan ve tam eşleşen şarkıyı bul
       const exactMatch = searchData.data.find((track: DeezerTrack) => {
+        if (!track.preview) return false; // Preview URL'si olmayan şarkıları atla
+        
         const trackTitle = track.title.toLowerCase();
         const trackArtist = track.artist.toLowerCase();
         const searchTitle = song.title.toLowerCase();
         const searchArtist = song.artist.toLowerCase();
 
-        // Başlık ve sanatçı adının birbirini içermesi yeterli
         return (trackTitle.includes(searchTitle) || searchTitle.includes(trackTitle)) &&
                (trackArtist.includes(searchArtist) || searchArtist.includes(trackArtist));
       });
@@ -269,8 +436,9 @@ async function searchTrack(song: { title: string; artist: string; deezerId: stri
         return exactMatch;
       }
 
-      // Tam eşleşme yoksa, en yakın eşleşmeyi bul
+      // Preview URL'si olan en yakın eşleşmeyi bul
       const bestMatch = searchData.data.reduce((best: DeezerTrack | null, current: DeezerTrack) => {
+        if (!current.preview) return best; // Preview URL'si olmayan şarkıları atla
         if (!best) return current;
 
         const currentTitle = current.title.toLowerCase();
@@ -278,7 +446,6 @@ async function searchTrack(song: { title: string; artist: string; deezerId: stri
         const searchTitle = song.title.toLowerCase();
         const searchArtist = song.artist.toLowerCase();
 
-        // Mevcut en iyi eşleşme ile karşılaştır
         const currentScore = 
           (currentTitle.includes(searchTitle) ? 2 : 0) +
           (currentArtist.includes(searchArtist) ? 2 : 0) +
@@ -316,7 +483,7 @@ export async function getRandom90sPopQuiz(): Promise<QuizQuestion> {
     const correctTrack = await searchTrack(randomSong);
     
     if (!correctTrack) {
-      // Eğer şarkı bulunamazsa, başka bir şarkı dene
+      // Eğer şarkı bulunamazsa veya preview URL'si yoksa, başka bir şarkı dene
       return getRandom90sPopQuiz();
     }
 
